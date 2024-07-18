@@ -8,7 +8,6 @@ import * as path from "node:path"
 
 
 function wrapShare(id) {
-  
       return {
         code: `
       const vue = await import("${'vue'}")

@@ -33,8 +33,17 @@ export default defineConfig({
         // }},
       ],
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vue": ["vue"]
+        }
+      }
+    }
+  },
   optimizeDeps: {
-    include: ["@module-federation/enhanced/runtime", "react"],
+    include: ["@module-federation/enhanced/runtime"],
     needsInterop: ["module-federation-vite/qwert.js", "module-federation-vite/qwert1.js", "module-federation-vite/qwert1.js?mfshare=vue", "module-federation-vite/qwert1.js?mfshare=react"]
   },
   // build: {
