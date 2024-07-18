@@ -3,8 +3,6 @@ import vue from '@vitejs/plugin-vue'
 import fe from "./pl"
 import fe1 from "./pl1"
 import topLevelAwait from "vite-plugin-top-level-await";
-import c from "@rollup/plugin-commonjs"
-import cn from "@rollup/plugin-node-resolve"
 import {resolve} from "node:path"
 
 
@@ -14,8 +12,8 @@ export default defineConfig({
   resolve: {
       alias:         [
         {find: "@", replacement: "src"},
-        {find: "remote2", replacement: ("@chagee/module-federation-vite/src/qwert.js?a=2")},
-        {find: "remote3", replacement: resolve("node_modules/@chagee/module-federation-vite/src/qwert.js?a=3")},
+        {find: "remote2", replacement: ("module-federation-vite/qwert.js?a=2")},
+        {find: "remote3", replacement: "module-federation-vite/qwert.js?a=3"},
         // {find: "react", async customResolver(r,d ,e) {
         //   // if (d.indexOf("qwert1.js?a=vue") > -1) {
         //   //   const {id} = await this.resolve("vue", d, e)
@@ -37,7 +35,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ["@module-federation/enhanced/runtime", "react"],
-    needsInterop: ["@chagee/module-federation-vite/src/qwert.js", "@chagee/module-federation-vite/src/qwert1.js", "@chagee/module-federation-vite/src/qwert1.js?mfshare=vue", "@chagee/module-federation-vite/src/qwert1.js?mfshare=react"]
+    needsInterop: ["module-federation-vite/qwert.js", "module-federation-vite/qwert1.js", "module-federation-vite/qwert1.js?mfshare=vue", "module-federation-vite/qwert1.js?mfshare=react"]
   },
   // build: {
   //   commonjsOptions: {

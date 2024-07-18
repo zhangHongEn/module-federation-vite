@@ -4,7 +4,7 @@ import MagicString from 'magic-string';
 import { createFilter } from '@rollup/pluginutils';
 
 export default function replaceModuleName(options = {}) {
-  const { targets = [], replacement = '@chagee/module-federation-vite/src/qwert1.js' } = options;
+  const { targets = [], replacement = 'module-federation-vite/qwert1.js' } = options;
   const filter = createFilter([/\.js$/, /\.vue$/]);
 
   return {
