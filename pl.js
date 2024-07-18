@@ -11,9 +11,8 @@ function wrapShare(id) {
       return {
         code: `
       const vue = await import("${'vue'}")
-      console.log(123123312)
+      console.log("开始加载shared vue")
       await new Promise(res => setTimeout(res, 1000))
-      console.log(222, vue)
       export default vue
       `,map: null,
       syntheticNamedExports: true

@@ -17,8 +17,8 @@ const rou = createRouter({
   ]
 })
 
-console.log(333, getCurrentInstance, R)
-console.log(22,ap === ap1)
+console.log("share vue", createApp)
+console.log("remote1",ap , "remote2", ap1, ap === ap1)
 // console.log(111111, App1, React)
 
 createApp(App).use(rou).mount('#app')
