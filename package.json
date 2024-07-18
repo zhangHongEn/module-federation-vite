@@ -1,0 +1,29 @@
+{
+  "name": "module-federation-vite",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --force",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@module-federation/enhanced": "^0.2.6",
+    "react": "^18.3.1",
+    "vue": "^3.4.29"
+  },
+  "devDependencies": {
+    "@module-federation/esbuild": "^0.0.5",
+    "@originjs/vite-plugin-federation": "^1.3.5",
+    "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/pluginutils": "^5.1.0",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "estree-walker": "^3.0.3",
+    "magic-string": "^0.30.10",
+    "vite": "^5.3.1",
+    "vite-plugin-commonjs": "^0.10.1",
+    "vite-plugin-top-level-await": "^1.4.1"
+  }
+}
