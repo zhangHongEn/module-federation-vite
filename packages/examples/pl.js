@@ -1,11 +1,5 @@
 import {createFilter} from '@rollup/pluginutils';
-const filter = createFilter([/.js/])
-import url from 'node:url'
-
-const wrapMap = {}
-import * as path from "node:path"
-
-
+const filter = createFilter()
 
 function wrapShare(id) {
       return {
@@ -24,6 +18,7 @@ export default function federation(
 ) {
   return {
     name: "module-federation-vite",
+    enforce: "post",
     config(options) {
       return options
     },
@@ -31,14 +26,14 @@ export default function federation(
       if (!filter(id)) return
       // console.log(123123, id)
       // if (id.indexOf("__mfshare__") === -1) {
-      if (id.indexOf("qwert1") > -1) {
-        // console.log(123123, id)
+        if (id.indexOf("__overrideModule__sharedvue") > -1 || id.indexOf("__overrideModule__=0") > -1) {
+          console.log("shared", id)
         // if (id.indexOf(".vite/deps/vue.js") > -1 || /(node\_modules[^/]*\/vue\/)|(node_modules[^/]*\/vue\@[\/]+)/.test(id)) {
-        console.log(123123, new url.URLSearchParams(id.substr(id.indexOf("?"))).get("mfshare"))
-          return wrapShare(new url.URLSearchParams(id.substr(id.indexOf("?"))).get("mfshare"))
+          return wrapShare()
         // }
       }
       if (id.indexOf("remote2") > -1 || id.indexOf("?a=2") > -1) {
+        console.log("remote", id)
         // return
         return {
           code: `

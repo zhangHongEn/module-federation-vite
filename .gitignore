@@ -1,26 +1,15 @@
-# Logs
-logs
-*.log
+.DS_Store
+node_modules
+/dist
+
+# log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
+yarn.lock*
 pnpm-lock.yaml
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
+# editor directories and files
 .idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+.vscode
+

@@ -1,0 +1,4 @@
+packages:
+  - 'packages/exmaples'
+  - 'packages/module-federation-vite'
+  - 'packages/rollup-plugin-override-module'
