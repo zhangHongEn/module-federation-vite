@@ -1,3 +1,0 @@
-pnpm install
-
-pnpm dev

@@ -19,7 +19,7 @@ export default function federation(
   return {
     name: "module-federation-vite",
     enforce: "post",
-    config(options) {
+    config(options, c) {
       return options
     },
     async transform(code, id) {

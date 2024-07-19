@@ -5,12 +5,8 @@
   "scripts": {
     "dev": "vite --force",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite build && http-server --cors -p 5173 dist"
   },
-  "files": [
-    "qwert.js",
-    "qwert1.js"
-  ],
   "dependencies": {
     "@module-federation/enhanced": "^0.2.6",
     "module-federation-vite": "^0.0.3",
