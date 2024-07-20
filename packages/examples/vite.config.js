@@ -16,6 +16,7 @@ export default defineConfig({
       // }
       alias: [
         {find: /^remote2(\/.*|$)?/, customResolver(source, importer, options) {
+          console.log(1111, source,importer)
           return this.resolve("vite-plugin-override-module-empty?a=2")
         }},
         {find: /^remote3(\/.*|$)?/, replacement: "vite-plugin-override-module-empty?a=3"}
