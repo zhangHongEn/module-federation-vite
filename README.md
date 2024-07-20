@@ -1,3 +1,9 @@
+## 本地预览
+``` shell
+pnpm install && pnpm run dev
+pnpm install && pnpm run build
+```
+
 ## 实现原理
 
 #### 代理remote模块
