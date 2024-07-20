@@ -24,7 +24,7 @@ function normalizeExposes(exposes) {
 }
 exports.normalizeExposes = normalizeExposes
 
-function normalizeInfo(key, remote) {
+function normalizeRemoteItem(key, remote) {
   if (typeof remote === "string") {
     const [entryGlobalName] = remote.split("@")
     const entry = remote.replace(entryGlobalName + "@", "")
@@ -46,29 +46,58 @@ function normalizeInfo(key, remote) {
 }
 
 function normalizeRemotes(remotes) {
-  if (!remotes) return [];
-  if (Array.isArray(remotes)) {
-      return remotes.map(item => normalizeInfo(item.name, item));
-  }
+  if (!remotes) return {};
+  const result  = {}
+  // if (Array.isArray(remotes)) {
+  //   Object.keys()
+  //     return remotes.map(item => normalizeRemoteItem(item.name, item));
+  // }
   if (typeof remotes === "object") {
-    return Object.keys(remotes).map(key => normalizeInfo(key, remotes[key]))
+    Object.keys(remotes).forEach(key => {
+      result[key] = normalizeRemoteItem(key, remotes[key])
+    })
   }
-  return []
+  return result
 }
 exports.normalizeRemotes = normalizeRemotes
 
+
+function normalizeShareItem(key, shareItem) {
+  if (typeof shareItem === "string") {
+    return {
+      name: shareItem,
+      version: "*",
+      scope: "default",
+      shareConfig: {
+        singleton: false,
+        requiredVersion: "*"
+      }
+    }
+  }
+  if (typeof shareItem === "object") {
+    return {
+      name: key,
+      version: shareItem.version || "*",
+      scope: shareItem.shareScope || "default",
+      shareConfig: {
+        singleton: shareItem.singleton || false,
+        requiredVersion: shareItem.requiredVersion || "*"
+      }
+    }
+  }
+}
 function normalizeShared(shared) {
   if (!shared) return {};
+  const result = {}
   if (Array.isArray(shared)) {
-      const normalized = {};
-      shared.forEach((item, index) => {
-          if (typeof item === 'string') {
-              normalized[`shared_${index}`] = { import: item };
-          } else {
-              Object.assign(normalized, item);
-          }
-      });
-      return normalized;
+    shared.forEach(keyt => {
+      result[key] = normalizeShareItem(key, key)
+    })
+  }
+  if (typeof shared === "object") {
+    Object.keys(shared).forEach(key => {
+      result[key] = normalizeShareItem(key, shared[key])
+    })
   }
   return shared;
 }

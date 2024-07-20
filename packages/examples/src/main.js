@@ -18,6 +18,7 @@ const rou = createRouter({
 })
 
 console.log("share vue", createApp)
+console.log("share React", R)
 console.log("remote1App", remote1App)
 console.log("remote2", remote2)
 // console.log(111111, App1, React)

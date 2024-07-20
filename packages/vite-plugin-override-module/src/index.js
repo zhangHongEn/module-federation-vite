@@ -13,15 +13,13 @@ exports.matchModule = function matchModule(moduleName, id) {
 }
 
 exports.overrideModule = function overrideModule(options = {}) {
-  const { override = {
-    vue: "sharedvue",
-    react: "sharedreact"
-  }, include, exclude } = options;
+  let { override = [], include, exclude } = options;
+  override = new Set(override)
   const filterFunction = createFilter(include, exclude);
-  const alias = {}
-  Object.keys(override).forEach((key) => {
+  const alias = {};
+  ;[...override].forEach((key) => {
     // matchMap["__overrideModule__" + override[key]] = moduleIndex
-    alias["__overrideModule__" + override[key]] = `vite-plugin-override-module-empty?__overrideModule__=${encodeURIComponent(override[key])}`
+    alias["__overrideModule__" + key] = `vite-plugin-override-module-empty?__overrideModule__=${encodeURIComponent(key)}`
   })
   // console.log(1111222, alias)
   return [
@@ -60,12 +58,10 @@ exports.overrideModule = function overrideModule(options = {}) {
             enter(node) {
               const replaceIfMatch = (sourceNode) => {
                 if (sourceNode && sourceNode.value) {
-                  let newModuleName = null;
-                  newModuleName = override[sourceNode.value] || null;
-                  if (newModuleName !== null) {
+                  if (override.has(sourceNode.value)) {
                     const start = sourceNode.start + 1; // Skip the opening quote
                     const end = sourceNode.end - 1; // Skip the closing quote
-                    s.overwrite(start, end, "__overrideModule__" + newModuleName);
+                    s.overwrite(start, end, "__overrideModule__" + sourceNode.value);
                   }
                 }
               };
