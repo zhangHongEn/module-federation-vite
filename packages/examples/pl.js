@@ -26,14 +26,14 @@ export default function federation(
       if (!filter(id)) return
       // console.log(123123, id)
       // if (id.indexOf("__mfshare__") === -1) {
-        if (id.indexOf("__overrideModule__sharedvue") > -1 || id.indexOf("__overrideModule__=0") > -1) {
-          console.log("shared", id)
+        if (id.indexOf("__overrideModule__sharedvue") > -1 || id.indexOf("__overrideModule__=" + decodeURIComponent("sharedvue")) > -1) {
+          console.log(333, "shared", id)
         // if (id.indexOf(".vite/deps/vue.js") > -1 || /(node\_modules[^/]*\/vue\/)|(node_modules[^/]*\/vue\@[\/]+)/.test(id)) {
           return wrapShare()
         // }
       }
-      if (id.indexOf("remote2") > -1 || id.indexOf("?a=2") > -1) {
-        console.log("remote", id)
+      if (id.indexOf("remote2") > -1 || id.indexOf(decodeURIComponent("__overrideModule__=remote2")) > -1) {
+        console.log(333, "remote", id)
         // return
         return {
           code: `
@@ -49,28 +49,8 @@ export default function federation(
               }
           ],
         })
+          console.log(1111111, "${id}")
         export default await loadRemote("mfapp01/App")
-        `,map: null,
-        syntheticNamedExports: true
-        }
-      }
-      if (id.indexOf("remote3") > -1 || id.indexOf("?a=3") > -1) {
-        // return
-        return {
-          code: `
-        import {init, loadRemote} from "@module-federation/enhanced/runtime"
-        await init({
-          name: '@demo/main-app',
-          remotes: [
-              {
-                name: 'mfapp02',
-                type: "var",
-                alias: 'mfapp02',
-                entry: 'http://unpkg.com/mf-app-02/dist/remoteEntry.js',
-              }
-          ],
-        })
-        export default await loadRemote("mfapp02/App")
         `,map: null,
         syntheticNamedExports: true
         }

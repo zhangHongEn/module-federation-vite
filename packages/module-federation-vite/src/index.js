@@ -22,7 +22,7 @@ export default function federation(
   const alias = {}
   remotes.forEach((key) => {
     // matchMap[] = moduleIndex
-    alias["__moduleFederation__" + override[key]] = `vite-plugin-override-module-empty?__overrideModule__=${moduleIndex}`
+    alias["__moduleFederation__" + override[key]] = `vite-plugin-override-module-empty?__overrideModule__=${encodeURIComponent(key)}`
     moduleIndex++
   })
   return {

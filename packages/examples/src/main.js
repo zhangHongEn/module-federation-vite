@@ -5,7 +5,7 @@ import App from './App.vue'
 // import App1 from "remote/App"
 import R from "react"
 import ap from "remote2/App"
-import ap3 from "remote2/App1"
+import ap34 from "remote2"
 import ap1 from "remote3"
 
 const rou = createRouter({

@@ -2,9 +2,7 @@ const { walk } = require('estree-walker');
 const MagicString = require('magic-string');
 const path = require("path")
 const { createFilter } = require('@rollup/pluginutils');
-const aliasPlugin = require("@rollup/plugin-alias").default;
 // const emptyPath = path.resolve(__dirname, "./empty.js")
-let moduleIndex = 0
 const matchMap = {}
 
 exports.matchMap = matchMap
@@ -22,9 +20,8 @@ exports.overrideModule = function overrideModule(options = {}) {
   const filterFunction = createFilter(include, exclude);
   const alias = {}
   Object.keys(override).forEach((key) => {
-    matchMap["__overrideModule__" + override[key]] = moduleIndex
-    alias["__overrideModule__" + override[key]] = `vite-plugin-override-module-empty?__overrideModule__=${moduleIndex}`
-    moduleIndex++
+    // matchMap["__overrideModule__" + override[key]] = moduleIndex
+    alias["__overrideModule__" + override[key]] = `vite-plugin-override-module-empty?__overrideModule__=${encodeURIComponent(override[key])}`
   })
   console.log(1111222, alias)
   return [
@@ -42,6 +39,7 @@ exports.overrideModule = function overrideModule(options = {}) {
         })
         config.optimizeDeps.needsInterop.push("vite-plugin-override-module-empty")
         config.resolve.alias.push(...Object.keys(alias).map(key => ({find: key, replacement: alias[key]})))
+        console.log(123213312, config.resolve.alias)
         // Object.assign(config.resolve.alias, alias)
         
       },

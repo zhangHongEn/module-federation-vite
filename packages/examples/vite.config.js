@@ -15,11 +15,12 @@ export default defineConfig({
       //   remote3: 'vite-plugin-override-module-empty?a=3',
       // }
       alias: [
-        {find: /^remote2(\/.*|$)?/, customResolver(source, importer, options) {
-          console.log(1111, source,importer)
-          return this.resolve("vite-plugin-override-module-empty?a=2")
+        {find: /^(remote2(\/.*|$)?)/, replacement: "$1", customResolver(source, importer, options) {
+          return this.resolve("vite-plugin-override-module-empty?__overrideModule__=" + encodeURIComponent(source))
         }},
-        {find: /^remote3(\/.*|$)?/, replacement: "vite-plugin-override-module-empty?a=3"}
+        {find: /^(remote3(\/.*|$)?)/, replacement: "$1", customResolver(source, importer, options) {
+          return this.resolve("vite-plugin-override-module-empty?__overrideModule__=" + encodeURIComponent(source))
+        }},
       ]
   },
   build: {
