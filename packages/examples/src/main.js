@@ -4,9 +4,8 @@ import './style.css'
 import App from './App.vue'
 // import App1 from "remote/App"
 import R from "react"
-import ap from "remote2/App"
-import ap34 from "remote2"
-import ap1 from "remote3"
+import remote1App from "remote1/App"
+import remote2 from "remote2/App"
 
 const rou = createRouter({
   history: createWebHistory(),
@@ -19,7 +18,8 @@ const rou = createRouter({
 })
 
 console.log("share vue", createApp)
-console.log("remote1",ap , "remote2", ap1, ap === ap1)
+console.log("remote1App", remote1App)
+console.log("remote2", remote2)
 // console.log(111111, App1, React)
 
 createApp(App).use(rou).mount('#app')

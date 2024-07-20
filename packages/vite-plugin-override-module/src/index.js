@@ -23,7 +23,7 @@ exports.overrideModule = function overrideModule(options = {}) {
     // matchMap["__overrideModule__" + override[key]] = moduleIndex
     alias["__overrideModule__" + override[key]] = `vite-plugin-override-module-empty?__overrideModule__=${encodeURIComponent(override[key])}`
   })
-  console.log(1111222, alias)
+  // console.log(1111222, alias)
   return [
     // aliasPlugin({
     //   entries: alias
@@ -39,7 +39,6 @@ exports.overrideModule = function overrideModule(options = {}) {
         })
         config.optimizeDeps.needsInterop.push("vite-plugin-override-module-empty")
         config.resolve.alias.push(...Object.keys(alias).map(key => ({find: key, replacement: alias[key]})))
-        console.log(123213312, config.resolve.alias)
         // Object.assign(config.resolve.alias, alias)
         
       },

@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@module-federation/enhanced": "^0.2.6",
-    "module-federation-vite": "^0.0.3",
+    "module-federation-vite": "workspace:*",
     "react": "^18.3.1",
     "vite-plugin-override-module": "workspace:*",
     "vite-plugin-override-module-empty": "^1.0.1",
