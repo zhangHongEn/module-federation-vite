@@ -36,8 +36,11 @@ module.exports = function addEntry(entryName, entryPath, fileName) {
         if (name === entryName) {
           return fileName
         }
-        if (ori) {
+        if (typeof ori === "function") {
           return ori.apply(this, args)
+        }
+        if (typeof ori === "string") {
+          return ori
         }
         return "[name][hash].js"
       };
