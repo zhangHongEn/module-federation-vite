@@ -8,6 +8,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "@module-federation/enhanced": "^0.2.6",
     "@rollup/pluginutils": "^5.1.0",
     "estree-walker": "^2",
     "magic-string": "^0.30.10",
