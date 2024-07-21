@@ -140,6 +140,7 @@ module.exports = function federation(
   console.log(123, shared)
   let command = ""
   const alias = [
+    {find: "@module-federation/runtime-tools", replacement: require.resolve("@module-federation/runtime-tools")}
   ]
   Object.keys(remotes).forEach(key => {
     const remote = remotes[key]
