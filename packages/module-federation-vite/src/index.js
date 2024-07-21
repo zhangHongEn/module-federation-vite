@@ -135,7 +135,7 @@ module.exports = function federation(
       find: new RegExp(`(${remote.name}(\/.*|$)?)`),
       replacement: "$1",
       customResolver(source) {
-        return this.resolve("vite-plugin-override-module-empty?__moduleRemote__=" + encodeURIComponent(source))
+        return this.resolve(require.resolve("vite-plugin-override-module-empty") + "?__moduleRemote__=" + encodeURIComponent(source))
       }
     }, 
     )

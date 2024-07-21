@@ -19,7 +19,7 @@ exports.overrideModule = function overrideModule(options = {}) {
   const alias = {};
   ;[...override].forEach((key) => {
     // matchMap["__overrideModule__" + override[key]] = moduleIndex
-    alias["__overrideModule__" + key] = `vite-plugin-override-module-empty?__overrideModule__=${encodeURIComponent(key)}`
+    alias["__overrideModule__" + key] = require.resolve(`vite-plugin-override-module-empty`) + `?__overrideModule__=${encodeURIComponent(key)}`
   })
   // console.log(1111222, alias)
   return [
@@ -39,6 +39,9 @@ exports.overrideModule = function overrideModule(options = {}) {
         config.resolve.alias.push(...Object.keys(alias).map(key => ({find: key, replacement: alias[key]})))
         // Object.assign(config.resolve.alias, alias)
         
+      },
+      resolveId(id) {
+        return alias[id]
       },
       transform: {
         handler(code, id) {
