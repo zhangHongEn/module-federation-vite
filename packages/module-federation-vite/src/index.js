@@ -82,7 +82,7 @@ function generateRemoteEntry({remotes, exposes, shared, name}) {
         }).join(",")}
       }
     });
-    console.log(123, new Promise(resolve => initRes.hooks.lifecycle.init.once(resolve)))
+    // console.log(123, new Promise(resolve => initRes.hooks.lifecycle.init.once(resolve)))
     return new Promise(resolve => initRes.hooks.lifecycle.init.once(resolve))
   }
 
@@ -99,7 +99,7 @@ function generateRemoteEntry({remotes, exposes, shared, name}) {
 }
 
 function wrapShare(id, shared) {
-  console.log(4444, "share", id)
+  // console.log(4444, "share", id)
   const shareConfig = shared[id].shareConfig
       return {
         code: `
@@ -111,7 +111,7 @@ function wrapShare(id, shared) {
         strictVersion: ${JSON.stringify(shareConfig.strictVersion)},
         requiredVersion: ${JSON.stringify(shareConfig.requiredVersion)}
       }}})
-      console.log("开始加载shared ${id}", res)
+      // console.log("开始加载shared ${id}", res)
       export default res()
       `,map: null,
       syntheticNamedExports: true
@@ -119,7 +119,7 @@ function wrapShare(id, shared) {
 }
 
 function wrapRemote(id) {
-  console.log(444, "remote", id)
+  // console.log(444, "remote", id)
   return {
     code: `
     import {loadRemote} from "@module-federation/runtime-tools"
@@ -137,7 +137,7 @@ module.exports = function federation(
     shared,
     filename,
   } = options
-  console.log(123, shared)
+  // console.log(123, shared)
   let command = ""
   const alias = [
     {find: "@module-federation/runtime-tools", replacement: require.resolve("@module-federation/runtime-tools")}
@@ -174,7 +174,7 @@ module.exports = function federation(
         Object.keys(shared).forEach(key => {
           config.optimizeDeps.include.push(key)
         })
-        console.log(123123, config.resolve.alias)
+        // console.log(123123, config.resolve.alias)
       },
       resolveId(id) {
         if (id === "__mf__cwdRemoteEntry") {
