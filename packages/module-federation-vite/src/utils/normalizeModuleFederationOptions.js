@@ -5,22 +5,28 @@
 //     type: RemoteEntryType;
 //     entryGlobalName: string;
 //     shareScope: string;
+const path = require("path")
 
+function normalizeExposesItem(key, item) {
+  let importPath
+  if (typeof item === "string") {
+    importPath = item
+  }
+  if (typeof item === "object") {
+    importPath = item.import
+  }
+  return {
+    import: importPath
+  }
+}
     // Helper functions to normalize each type of option
 function normalizeExposes(exposes) {
   if (!exposes) return {};
-  if (Array.isArray(exposes)) {
-      const normalized = {};
-      exposes.forEach((item, index) => {
-          if (typeof item === 'string') {
-              normalized[`module_${index}`] = { import: item };
-          } else {
-              Object.assign(normalized, item);
-          }
-      });
-      return normalized;
-  }
-  return exposes;
+  const res = {}
+  Object.keys(exposes).forEach(key => {
+    res[key] = normalizeExposesItem(key, exposes[key])
+  })
+  return res;
 }
 exports.normalizeExposes = normalizeExposes
 
@@ -90,7 +96,7 @@ function normalizeShared(shared) {
   if (!shared) return {};
   const result = {}
   if (Array.isArray(shared)) {
-    shared.forEach(keyt => {
+    shared.forEach(key => {
       result[key] = normalizeShareItem(key, key)
     })
   }
@@ -99,7 +105,7 @@ function normalizeShared(shared) {
       result[key] = normalizeShareItem(key, shared[key])
     })
   }
-  return shared;
+  return result;
 }
 exports.normalizeShared = normalizeShared
 
@@ -113,7 +119,7 @@ exports.normalizeModuleFederationOptions = normalizeModuleFederationOptions
 function normalizeModuleFederationOptions(options) {
   return {
       exposes: normalizeExposes(options.exposes),
-      filename: options.filename,
+      filename: options.filename || "remoteEntry.js",
       library: normalizeLibrary(options.library),
       name: options.name,
       remoteType: options.remoteType,

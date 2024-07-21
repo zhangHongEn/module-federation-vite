@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "vite-plugin-override-module": "workspace: *"
+    "vite-plugin-override-module": "workspace: *",
+    "vite-plugin-add-entry": "workspace: *"
   },
   "dependencies": {
     "vite-plugin-override-module-empty": "^1.0.1",

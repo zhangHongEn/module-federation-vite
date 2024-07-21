@@ -6,6 +6,8 @@ import App from './App.vue'
 import R from "react"
 import remote1App from "remote1/App"
 import remote2 from "remote2/App"
+import remote3 from "remote3/button"
+console.log("remote3 manifest.json", remote3)
 
 const rou = createRouter({
   history: createWebHistory(),

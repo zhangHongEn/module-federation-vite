@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import fe from "module-federation-vite"
 import topLevelAwait from "vite-plugin-top-level-await";
-console.log(123, fe)
 
 
 // https://vitejs.dev/config/
@@ -29,18 +28,20 @@ export default defineConfig({
       remotes: {
         remote1: "mfapp01@https://unpkg.com/mf-app-01@1.0.9/dist/remoteEntry.js",
         remote2: "mfapp02@https://unpkg.com/mf-app-02/dist/remoteEntry.js",
+        remote3: "remote1@https://unpkg.com/react-manifest-example_remote1@1.0.6/dist/mf-manifest.json"
       },
-      filename: "remoteEntry.js",
+      exposes: {
+        "App": "./src/App.vue"
+      },
+      filename: "dd/remoteEntry.js",
       shared: {
-        vue: {},
-        react: {}
+        vue: {
+        },
+        react: {
+          requiredVersion: "18"
+        }
       },
     }),
-    topLevelAwait({
-      // The export name of top-level await promise for each chunk module
-      promiseExportName: "__tla",
-      // The function to generate import names of top-level await promise in each chunk module
-      promiseImportName: i => `__tla_${i}`
-    }),
+    topLevelAwait(),
   ],
 })
