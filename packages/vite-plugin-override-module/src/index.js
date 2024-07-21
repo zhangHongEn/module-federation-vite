@@ -23,9 +23,6 @@ exports.overrideModule = function overrideModule(options = {}) {
   })
   // console.log(1111222, alias)
   return [
-    // aliasPlugin({
-    //   entries: alias
-    // }),
     {
       name: 'overrideModule',
       enforce: "post",
@@ -37,8 +34,6 @@ exports.overrideModule = function overrideModule(options = {}) {
         })
         config.optimizeDeps.needsInterop.push("vite-plugin-override-module-empty")
         config.resolve.alias.push(...Object.keys(alias).map(key => ({find: key, replacement: alias[key]})))
-        // Object.assign(config.resolve.alias, alias)
-        
       },
       resolveId(id) {
         return alias[id]

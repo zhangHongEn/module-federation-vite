@@ -3,6 +3,9 @@ const {overrideModule} = require("vite-plugin-override-module")
 const addEntry = require("vite-plugin-add-entry")
 const emptyPath = require.resolve("vite-plugin-override-module-empty")
 const {normalizeModuleFederationOptions} = require("./utils/normalizeModuleFederationOptions")
+const aliasToArrayPlugin = require("./utils/aliasToArrayPlugin")
+const normalizeOptimizeDepsPlugin = require("./utils/normalizeOptimizeDeps")
+const normalizeBuildPlugin = require("./utils/normalizeBuild")
 const filter = createFilter()
 
 // version: string;
@@ -143,6 +146,9 @@ module.exports = function federation(
   const remotePrefixList = Object.keys(remotes)
   const sharedKeyList = Object.keys(shared).map(item => `__overrideModule__${item}`)
   return [
+    aliasToArrayPlugin,
+    normalizeOptimizeDepsPlugin,
+    normalizeBuildPlugin(shared),
     addEntry("remoteEntry", emptyPath + "?__mf__wrapRemoteEntry__", filename),
     addEntry("hostInit", emptyPath + "?__mf__isHostInit", "hostInit.js"),
     overrideModule({
@@ -154,11 +160,9 @@ module.exports = function federation(
       config(config, {command: _command}) {
         command = _command
         config.resolve.alias.push(...alias)
-        if (!config.optimizeDeps.include) config.optimizeDeps.include = []
         config.optimizeDeps.include.push("@module-federation/enhanced/runtime")
         Object.keys(shared).forEach(key => {
           config.optimizeDeps.include.push(key)
-          config.build.rollupOptions.output.manualChunks[key] = [key]
         })
         console.log(123123, config.resolve.alias)
       },
