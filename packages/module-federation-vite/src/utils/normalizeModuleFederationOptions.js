@@ -74,6 +74,7 @@ function normalizeShareItem(key, shareItem) {
       name: shareItem,
       version: "*",
       scope: "default",
+      from: "",
       shareConfig: {
         singleton: false,
         requiredVersion: "*"
@@ -81,13 +82,19 @@ function normalizeShareItem(key, shareItem) {
     }
   }
   if (typeof shareItem === "object") {
+    let version
+    try {
+      version = require(path.join(key, "package.json")).version
+    } catch (e) {
+      console.log(e)
+    }
     return {
       name: key,
-      version: shareItem.version || "*",
+      version: shareItem.version || version,
       scope: shareItem.shareScope || "default",
       shareConfig: {
         singleton: shareItem.singleton || false,
-        requiredVersion: shareItem.requiredVersion || "*"
+        requiredVersion: shareItem.requiredVersion || version || "*"
       }
     }
   }

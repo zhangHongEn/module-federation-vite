@@ -32,9 +32,9 @@ function wrapHostInit() {
     await init()
     `
 }
-function generateRemoteEntry({remotes, exposes, shared}) {
+function generateRemoteEntry({remotes, exposes, shared, name}) {
   return `
-  import {init as runtimeInit} from "@module-federation/enhanced/runtime"
+  import {init as runtimeInit, loadRemote} from "@module-federation/runtime-tools"
   const exposesMap = {
     ${Object.keys(exposes).map(key => {
       return `
@@ -43,8 +43,8 @@ function generateRemoteEntry({remotes, exposes, shared}) {
     }).join(",")}
   }
   async function init() {
-    await runtimeInit({
-      name: 'app1',
+    const initRes = runtimeInit({
+      name: ${JSON.stringify(name)},
       remotes: [${Object.keys(remotes).map(key => {
           const remote = remotes[key]
           return `
@@ -63,10 +63,10 @@ function generateRemoteEntry({remotes, exposes, shared}) {
           return `
             ${key}: {
               name: ${JSON.stringify(shareItem.name)},
-              version: ${JSON.stringify("1.0.0" || shareItem.version)},
+              version: ${JSON.stringify(shareItem.version)},
               scope: ${JSON.stringify(shareItem.scope)},
               loaded: false,
-              from: "app1",
+              from: ${JSON.stringify(name)},
               async get () {
                 const pkg = await import(${JSON.stringify(key)})
                 return function () {
@@ -82,7 +82,8 @@ function generateRemoteEntry({remotes, exposes, shared}) {
         }).join(",")}
       }
     });
-    return 1
+    console.log(123, new Promise(resolve => initRes.hooks.lifecycle.init.once(resolve)))
+    return new Promise(resolve => initRes.hooks.lifecycle.init.once(resolve))
   }
 
   function getExposes(moduleName) {
@@ -97,14 +98,20 @@ function generateRemoteEntry({remotes, exposes, shared}) {
   `
 }
 
-function wrapShare(id) {
+function wrapShare(id, shared) {
   console.log(4444, "share", id)
+  const shareConfig = shared[id].shareConfig
       return {
         code: `
-        import {loadShare} from "@module-federation/enhanced/runtime"
+        import {loadShare} from "@module-federation/runtime-tools"
       const res = await loadShare(${JSON.stringify(id)}, {
-      requiredVersion: "18"})
-      console.log("开始加载shared ${id}")
+      customShareInfo: {shareConfig:{
+        requiredVersion: ${JSON.stringify(shareConfig.requiredVersion)},
+        singleton: ${shareConfig.singleton},
+        strictVersion: ${JSON.stringify(shareConfig.strictVersion)},
+        requiredVersion: ${JSON.stringify(shareConfig.requiredVersion)}
+      }}})
+      console.log("开始加载shared ${id}", res)
       export default res()
       `,map: null,
       syntheticNamedExports: true
@@ -115,7 +122,7 @@ function wrapRemote(id) {
   console.log(444, "remote", id)
   return {
     code: `
-    import {loadRemote} from "@module-federation/enhanced/runtime"
+    import {loadRemote} from "@module-federation/runtime-tools"
   export default await loadRemote(${JSON.stringify(id)})
   `,map: null,
   syntheticNamedExports: true
@@ -130,8 +137,10 @@ module.exports = function federation(
     shared,
     filename,
   } = options
+  console.log(123, shared)
   let command = ""
-  const alias = []
+  const alias = [
+  ]
   Object.keys(remotes).forEach(key => {
     const remote = remotes[key]
     alias.push({
@@ -160,7 +169,7 @@ module.exports = function federation(
       config(config, {command: _command}) {
         command = _command
         config.resolve.alias.push(...alias)
-        config.optimizeDeps.include.push("@module-federation/enhanced/runtime")
+        config.optimizeDeps.include.push("@module-federation/runtime-tools")
         Object.keys(shared).forEach(key => {
           config.optimizeDeps.include.push(key)
         })
@@ -197,12 +206,12 @@ module.exports = function federation(
         let [devSharedModuleName] = id.match(new RegExp(`\.vite\/deps\/(${sharedKeyList.join("|")})(\_.*\.js|\.js)`)) || []
         if (devSharedModuleName) {
           // generate shared
-          return wrapShare(devSharedModuleName.replace(".vite/deps/__overrideModule__", "").replace(/_/g, "/").replace(".js", ""))
+          return wrapShare(devSharedModuleName.replace(".vite/deps/__overrideModule__", "").replace(/_/g, "/").replace(".js", ""), shared)
         }
         let [prodSharedName] = id.match(/\_\_overrideModule\_\_=[^&]+/) || []
         if (prodSharedName) {
           // generate shared
-          return wrapShare(decodeURIComponent(prodSharedName.replace("__overrideModule__=", "")))
+          return wrapShare(decodeURIComponent(prodSharedName.replace("__overrideModule__=", "")), shared)
         }
         let [devRemoteModuleName] = id.match(new RegExp(`\.vite\/deps\/(${remotePrefixList.join("|")})(\_.*\.js|\.js)`)) || []
         if (devRemoteModuleName) {
