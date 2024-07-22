@@ -1,5 +1,6 @@
 
 module.exports = function addEntry(entryName, entryPath, fileName) {
+  let command
   return {
     name: 'add-entry',
     configureServer(server) {
