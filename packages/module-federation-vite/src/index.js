@@ -28,8 +28,8 @@ function wrapRemoteEntry () {
 }
 function wrapHostInit() {
   return `
-    import {init, get} from "__mf__cwdRemoteEntry"
-    await init()
+    import {init} from "__mf__cwdRemoteEntry"
+    init()
     `
 }
 function generateRemoteEntry({remotes, exposes, shared, name}) {
@@ -89,7 +89,7 @@ function generateRemoteEntry({remotes, exposes, shared, name}) {
   function getExposes(moduleName) {
     moduleName = moduleName.replace(/(^\\.\\/)?/, "")
     if (!(moduleName in exposesMap)) throw new Error(\`Module ./\${moduleName} does not exist in container.\`)
-    return (exposesMap[moduleName])()
+    return (exposesMap[moduleName])().then(res => () => res)
   }
   export {
       init,
