@@ -10,10 +10,13 @@ module.exports = (shared) => ({
   }
 })
 function normalizeManualChunks(output, shared = {}) {
+  const pattern = new RegExp(`node_modules/(${Object.keys(shared).join("|")})/`)
   if (!output.manualChunks) output.manualChunks = {}
-  const customChunks = new Set(Object.keys(shared))
   const wrapManualChunks = (original) => (id, ...args) => {
-    if (customChunks.has(id)) return id
+    const [_, moduleName] = id.match(pattern) || []
+    if (moduleName) {
+      return moduleName
+    }
     if (typeof original === 'function') {
       return original(id, ...args);
     }

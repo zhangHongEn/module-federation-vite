@@ -8,6 +8,8 @@ const normalizeOptimizeDepsPlugin = require("./utils/normalizeOptimizeDeps")
 const normalizeBuildPlugin = require("./utils/normalizeBuild")
 const filter = createFilter()
 
+let command = ""
+
 // version: string;
 //     get: SharedGetter;
 //     shareConfig: SharedConfig;
@@ -112,20 +114,20 @@ function wrapShare(id, shared) {
         requiredVersion: ${JSON.stringify(shareConfig.requiredVersion)}
       }}})
       // console.log("开始加载shared ${id}", res)
-      export default res()
+      export ${command !== "build" ? "default" : "const dynamicExport = "} res()
       `,map: null,
-      syntheticNamedExports: true
+      syntheticNamedExports: "dynamicExport"
       }
 }
-
+let con = null
 function wrapRemote(id) {
   // console.log(444, "remote", id)
   return {
     code: `
     import {loadRemote} from "@module-federation/runtime-tools"
-  export default await loadRemote(${JSON.stringify(id)})
+  export ${command !== "build" ? "default" : "const dynamicExport = "} await loadRemote(${JSON.stringify(id)})
   `,map: null,
-  syntheticNamedExports: true
+  syntheticNamedExports: "dynamicExport"
   }
 }
 module.exports = function federation(
@@ -138,7 +140,6 @@ module.exports = function federation(
     filename,
   } = options
   // console.log(123, shared)
-  let command = ""
   const alias = [
     {find: "@module-federation/runtime-tools", replacement: require.resolve("@module-federation/runtime-tools")}
   ]
@@ -148,6 +149,9 @@ module.exports = function federation(
       find: new RegExp(`(${remote.name}(\/.*|$)?)`),
       replacement: "$1",
       customResolver(source) {
+        if (!con.optimizeDeps) con.optimizeDeps = {}
+        if (!con.optimizeDeps.needsInterop) con.optimizeDeps.needsInterop = []
+        if (con.optimizeDeps.needsInterop.indexOf(source) === -1) con.optimizeDeps.needsInterop.push(source)
         return this.resolve(require.resolve("vite-plugin-override-module-empty") + "?__moduleRemote__=" + encodeURIComponent(source))
       }
     }, 
@@ -168,6 +172,7 @@ module.exports = function federation(
       name: "module-federation-vite",
       enforce: "post",
       config(config, {command: _command}) {
+        con = config
         command = _command
         config.resolve.alias.push(...alias)
         config.optimizeDeps.include.push("@module-federation/runtime-tools")

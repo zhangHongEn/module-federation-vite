@@ -11,6 +11,9 @@ module.exports = function addEntry(entryName, entryPath, fileName) {
         next();
       });
     },
+    config(config, {command: _command}) {
+      command = _command
+    },
     buildStart() {
       // if we don't expose any modules, there is no need to emit file
       this.emitFile({
