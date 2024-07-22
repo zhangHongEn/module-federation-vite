@@ -37,6 +37,7 @@ function wrapHostInit() {
 function generateRemoteEntry({remotes, exposes, shared, name}) {
   return `
   import {init as runtimeInit, loadRemote} from "@module-federation/runtime-tools"
+
   const exposesMap = {
     ${Object.keys(exposes).map(key => {
       return `
@@ -44,7 +45,7 @@ function generateRemoteEntry({remotes, exposes, shared, name}) {
       `
     }).join(",")}
   }
-  async function init() {
+  async function init(shares) {
     const initRes = runtimeInit({
       name: ${JSON.stringify(name)},
       remotes: [${Object.keys(remotes).map(key => {
