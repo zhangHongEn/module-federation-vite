@@ -1,10 +1,10 @@
-## 本地预览
+## preview
 ``` shell
 pnpm install && pnpm run dev
 pnpm install && pnpm run build
 ```
 
-## 用法
+## usage
 ``` js
 // vite.config.js
 import { defineConfig } from 'vite'
@@ -46,19 +46,28 @@ export default defineConfig({
 })
 ```
 
-## 实现原理
+## roadmap
+* fix: Secure "shareScopes" singleton（https://github.com/zhangHongEn/module-federation-vite/blob/9c3713ec24cb459f5f998ccb820c176cef65ae5c/packages/module-federation-vite/src/index.js#L48）
+* feat: generate mf-manifest.json
+* feat: support chrome plugin
+* feat: download remote d.ts
+* feat: generate d.ts
+* feat: support @vitejs/plugin-legacy
 
-#### 代理remote模块
-  * 通过alias regexp（/^remote(\/.*|$)?/）
-#### 代理shared模块
-  * 通过ast重写import, import "vue" --> import "__overrideModule__sharedvue"
-#### 代理模块动态export
-  * dev时使用optimizeDeps.needsInterop
-  * build时使用rollup syntheticNamedExports
-#### 同步import远程模块
-  * 被代理模块使用top-level-await
-  * 不支持的环境使用vite-plugin-top-level-await（参考[@originjs/vite-plugin-federation](https://github.com/originjs/vite-plugin-federation)）
-#### 支持各种remote（.json、.js;var、esm等
-  * 使用@module-federation/enhanced/runtime
-#### vite-plugin-override-module-empty作用
-  * 依赖预编译需要有实体文件, 无法使用虚拟模块, 虚拟模块optimizeDeps.needsInterop无法匹配
+## implementation principle
+
+#### proxy remote module
+  * alias regexp（/^remote(\/.*|$)?/）
+#### proxy shared module
+  * ast change import, import "vue" --> import "__overrideModule__vue"
+#### proxy module dynamic export
+  * dev mode use optimizeDeps.needsInterop
+  * build mode use rollup syntheticNamedExports
+#### sync import remote module
+  * use top-level-await
+  * Incompatible environment using vite-plugin-top-level-await（refer [@originjs/vite-plugin-federation](https://github.com/originjs/vite-plugin-federation)）
+#### Supports a wide variety of remote（.json、.js;var、esm ...)
+  * use @module-federation/runtime-tools
+#### vite-plugin-override-module-empty
+  * enforce: "post", Dependency precompilation requires entity files
+  * In theory, you can use enforce: "pre" + resolveId + load virtual module instead, The virtual module name cannot contain "":", otherwise optimizeDeps.needsInterop will not match

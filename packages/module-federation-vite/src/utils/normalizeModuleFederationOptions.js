@@ -69,32 +69,33 @@ exports.normalizeRemotes = normalizeRemotes
 
 
 function normalizeShareItem(key, shareItem) {
+  let version
+  try {
+    version = require(path.join(key, "package.json")).version
+  } catch (e) {
+    console.log(e)
+  }
   if (typeof shareItem === "string") {
     return {
       name: shareItem,
-      version: "*",
+      version,
       scope: "default",
-      from: "",
+      from: undefined,
       shareConfig: {
         singleton: false,
-        requiredVersion: "*"
+        requiredVersion: version
       }
     }
   }
   if (typeof shareItem === "object") {
-    let version
-    try {
-      version = require(path.join(key, "package.json")).version
-    } catch (e) {
-      console.log(e)
-    }
     return {
       name: key,
       version: shareItem.version || version,
       scope: shareItem.shareScope || "default",
       shareConfig: {
         singleton: shareItem.singleton || false,
-        requiredVersion: shareItem.requiredVersion || version || "*"
+        requiredVersion: shareItem.requiredVersion || version || "*",
+        strictVersion: !!shareItem.strictVersion,
       }
     }
   }
@@ -106,12 +107,14 @@ function normalizeShared(shared) {
     shared.forEach(key => {
       result[key] = normalizeShareItem(key, key)
     })
+    return result
   }
   if (typeof shared === "object") {
     Object.keys(shared).forEach(key => {
       result[key] = normalizeShareItem(key, shared[key])
     })
   }
+  
   return result;
 }
 exports.normalizeShared = normalizeShared
