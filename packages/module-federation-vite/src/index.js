@@ -32,8 +32,39 @@ function generateRemoteEntry({remotes, exposes, shared, name}) {
       `
     }).join(",")}
   }
-  async function init(shares) {
-    const initRes = runtimeInit({
+  async function init(shared = {}) {
+    // console.log(1111, shared)
+    const localShared = {
+      ${Object.keys(shared).map(key => {
+        const shareItem = shared[key]
+        return `
+          ${JSON.stringify(key)}: {
+            name: ${JSON.stringify(shareItem.name)},
+            version: ${JSON.stringify(shareItem.version)},
+            scope: [${JSON.stringify(shareItem.scope)}],
+            loaded: false,
+            from: ${JSON.stringify(name)},
+            async get () {
+              localShared[${JSON.stringify(key)}].loaded = true
+              const pkg = await import(${JSON.stringify(key)})
+              return function () {
+                return pkg
+              }
+            },
+            shareConfig: {
+              singleton: ${shareItem.shareConfig.singleton},
+              requiredVersion: ${JSON.stringify(shareItem.shareConfig.requiredVersion)}
+            }
+          }
+        `
+      }).join(",")}
+    }
+    Object.keys(localShared).forEach(pkgname => {
+      const localShareModule = localShared[pkgname]
+      if (!shared[pkgname]) shared[pkgname] = {}
+      if (!shared[pkgname][localShareModule.version]) shared[pkgname][localShareModule.version] = localShareModule
+    })
+    const initRes = await runtimeInit({
       name: ${JSON.stringify(name)},
       remotes: [${Object.keys(remotes).map(key => {
           const remote = remotes[key]
@@ -47,33 +78,9 @@ function generateRemoteEntry({remotes, exposes, shared, name}) {
           `
         }).join(",")}
       ],
-      shared: {
-        ${Object.keys(shared).map(key => {
-          const shareItem = shared[key]
-          return `
-            ${key}: {
-              name: ${JSON.stringify(shareItem.name)},
-              version: ${JSON.stringify(shareItem.version)},
-              scope: ${JSON.stringify(shareItem.scope)},
-              loaded: false,
-              from: ${JSON.stringify(name)},
-              async get () {
-                const pkg = await import(${JSON.stringify(key)})
-                return function () {
-                  return pkg
-                }
-              },
-              shareConfig: {
-                singleton: ${shareItem.shareConfig.singleton},
-                requiredVersion: ${JSON.stringify(shareItem.shareConfig.requiredVersion)}
-              }
-            }
-          `
-        }).join(",")}
-      }
+      shared: localShared
     });
-    // console.log(123, new Promise(resolve => initRes.hooks.lifecycle.init.once(resolve)))
-    return new Promise(resolve => initRes.hooks.lifecycle.init.once(resolve))
+    return initRes
   }
 
   function getExposes(moduleName) {
@@ -94,15 +101,14 @@ function wrapShare(id, shared) {
       return {
         code: `
         import {loadShare} from "@module-federation/runtime"
-      const res = await loadShare(${JSON.stringify(id)}, {
-      customShareInfo: {shareConfig:{
-        requiredVersion: ${JSON.stringify(shareConfig.requiredVersion)},
-        singleton: ${shareConfig.singleton},
-        strictVersion: ${JSON.stringify(shareConfig.strictVersion)},
-        requiredVersion: ${JSON.stringify(shareConfig.requiredVersion)}
-      }}})
-      // console.log("开始加载shared ${id}", res)
-      export ${command !== "build" ? "default" : "const dynamicExport = "} res()
+        const res = await loadShare(${JSON.stringify(id)}, {
+        customShareInfo: {shareConfig:{
+          singleton: ${shareConfig.singleton},
+          strictVersion: ${JSON.stringify(shareConfig.strictVersion)},
+          requiredVersion: ${JSON.stringify(shareConfig.requiredVersion)}
+        }}})
+        console.log("开始加载shared ${id}", res)
+        export ${command !== "build" ? "default" : "const dynamicExport = "} res()
       `,map: null,
       syntheticNamedExports: "dynamicExport"
       }
