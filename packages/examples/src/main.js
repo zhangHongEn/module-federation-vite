@@ -4,7 +4,7 @@ import './style.css'
 import App from './App.vue'
 // import App1 from "remote/App"
 import R from "react"
-import remote1App from "remote1/App"
+import mfapp01App from "mfapp01/App"
 import remote2 from "remote2/App"
 import remote3 from "remote3/button"
 
@@ -21,7 +21,7 @@ const rou = createRouter({
 
 console.log("share vue", createApp)
 console.log("share React", R)
-console.log("remote1App", remote1App)
+console.log("remote1App", mfapp01App)
 console.log("remote2", remote2)
 console.log("remote3 manifest.json", remote3)
 

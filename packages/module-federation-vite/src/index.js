@@ -9,19 +9,6 @@ const normalizeBuildPlugin = require("./utils/normalizeBuild")
 const filter = createFilter()
 
 let command = ""
-
-// version: string;
-//     get: SharedGetter;
-//     shareConfig: SharedConfig;
-//     scope: Array<string>;
-//     useIn: Array<string>;
-//     from: string;
-//     deps: Array<string>;
-//     lib?: () => Module;
-//     loaded?: boolean;
-//     loading?: null | Promise<any>;
-//     eager?: boolean;
-//     strategy: 'version-first' | 'loaded-first';
 function wrapRemoteEntry () {
   return `
   import {init, get} from "__mf__cwdRemoteEntry"
@@ -36,7 +23,7 @@ function wrapHostInit() {
 }
 function generateRemoteEntry({remotes, exposes, shared, name}) {
   return `
-  import {init as runtimeInit, loadRemote} from "@module-federation/runtime-tools"
+  import {init as runtimeInit, loadRemote} from "@module-federation/runtime"
 
   const exposesMap = {
     ${Object.keys(exposes).map(key => {
@@ -106,7 +93,7 @@ function wrapShare(id, shared) {
   const shareConfig = shared[id].shareConfig
       return {
         code: `
-        import {loadShare} from "@module-federation/runtime-tools"
+        import {loadShare} from "@module-federation/runtime"
       const res = await loadShare(${JSON.stringify(id)}, {
       customShareInfo: {shareConfig:{
         requiredVersion: ${JSON.stringify(shareConfig.requiredVersion)},
@@ -125,8 +112,8 @@ function wrapRemote(id) {
   // console.log(444, "remote", id)
   return {
     code: `
-    import {loadRemote} from "@module-federation/runtime-tools"
-  export ${command !== "build" ? "default" : "const dynamicExport = "} await loadRemote(${JSON.stringify(id)})
+    import {loadRemote} from "@module-federation/runtime"
+    export ${command !== "build" ? "default" : "const dynamicExport = "} await loadRemote(${JSON.stringify(id)})
   `,map: null,
   syntheticNamedExports: "dynamicExport"
   }
@@ -142,7 +129,7 @@ module.exports = function federation(
   } = options
   // console.log(123, shared)
   const alias = [
-    {find: "@module-federation/runtime-tools", replacement: require.resolve("@module-federation/runtime-tools")}
+    {find: "@module-federation/runtime", replacement: require.resolve("@module-federation/runtime")}
   ]
   Object.keys(remotes).forEach(key => {
     const remote = remotes[key]
@@ -176,7 +163,7 @@ module.exports = function federation(
         con = config
         command = _command
         config.resolve.alias.push(...alias)
-        config.optimizeDeps.include.push("@module-federation/runtime-tools")
+        config.optimizeDeps.include.push("@module-federation/runtime")
         Object.keys(shared).forEach(key => {
           config.optimizeDeps.include.push(key)
         })

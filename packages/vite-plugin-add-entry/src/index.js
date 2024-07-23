@@ -15,6 +15,7 @@ module.exports = function addEntry(entryName, entryPath, fileName) {
       command = _command
     },
     buildStart() {
+      if (command !== "build") return
       // if we don't expose any modules, there is no need to emit file
       this.emitFile({
         fileName: `${fileName}`,

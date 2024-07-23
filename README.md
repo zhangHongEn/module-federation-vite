@@ -9,7 +9,7 @@ pnpm install && pnpm run build
 // vite.config.js
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import fe from "module-federation-vite"
+import mf from "module-federation-vite"
 import topLevelAwait from "vite-plugin-top-level-await";
 
 
@@ -17,10 +17,10 @@ import topLevelAwait from "vite-plugin-top-level-await";
 export default defineConfig({
   plugins: [
     vue(),
-    fe({
+    mf({
       name: "bbc",
       remotes: {
-        remote1: "mfapp01@https://unpkg.com/mf-app-01@1.0.9/dist/remoteEntry.js",
+        mfapp01: "mfapp01@https://unpkg.com/mf-app-01@1.0.9/dist/remoteEntry.js",
         remote2: "mfapp02@https://unpkg.com/mf-app-02/dist/remoteEntry.js",
         remote3: "remote1@https://unpkg.com/react-manifest-example_remote1@1.0.6/dist/mf-manifest.json",
         // "remote4": {
@@ -41,8 +41,12 @@ export default defineConfig({
         }
       },
     }),
-    topLevelAwait(),
+    // If you set build.target: "chrome89", you can remove this plugin
+    // topLevelAwait(),
   ],
+  build: {
+    target: "chrome89"
+  }
 })
 ```
 
@@ -50,6 +54,7 @@ export default defineConfig({
 * fix: Secure "shareScopes" singleton（https://github.com/zhangHongEn/module-federation-vite/blob/9c3713ec24cb459f5f998ccb820c176cef65ae5c/packages/module-federation-vite/src/index.js#L48）
 * feat: generate mf-manifest.json
 * feat: support chrome plugin
+* feat: support runtime plugins
 * feat: download remote d.ts
 * feat: generate d.ts
 * feat: support @vitejs/plugin-legacy
@@ -67,7 +72,7 @@ export default defineConfig({
   * use top-level-await
   * Incompatible environment using vite-plugin-top-level-await（refer [@originjs/vite-plugin-federation](https://github.com/originjs/vite-plugin-federation)）
 #### Supports a wide variety of remote（.json、.js;var、esm ...)
-  * use @module-federation/runtime-tools
+  * use @module-federation/runtime
 #### vite-plugin-override-module-empty
   * enforce: "post", Dependency precompilation requires entity files
   * In theory, you can use enforce: "pre" + resolveId + load virtual module instead, The virtual module name cannot contain "":", otherwise optimizeDeps.needsInterop will not match
