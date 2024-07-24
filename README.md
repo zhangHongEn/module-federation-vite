@@ -51,7 +51,6 @@ export default defineConfig({
 ```
 
 ## roadmap
-* fix: Secure "shareScopes" singleton（https://github.com/zhangHongEn/module-federation-vite/blob/9c3713ec24cb459f5f998ccb820c176cef65ae5c/packages/module-federation-vite/src/index.js#L48）
 * feat: generate mf-manifest.json
 * feat: support chrome plugin
 * feat: support runtime plugins
