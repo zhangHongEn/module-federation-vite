@@ -1,3 +1,5 @@
+# Vite Plugin For Module Federation
+
 ## preview
 ``` shell
 pnpm install && pnpm run dev
@@ -5,13 +7,14 @@ pnpm install && pnpm run build
 ```
 
 ## usage
+https://module-federation.io/guide/basic/webpack.html
+
 ``` js
 // vite.config.js
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import mf from "module-federation-vite"
 import topLevelAwait from "vite-plugin-top-level-await";
-
 
 // https://vitejs.dev/config/
 export default defineConfig({
