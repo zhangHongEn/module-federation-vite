@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     vue(),
     mf({
-      name: "bbc",
+      name: "viteRemote",
       remotes: {
         mfapp01: "mfapp01@https://unpkg.com/mf-app-01@1.0.9/dist/remoteEntry.js",
         remote2: "mfapp02@https://unpkg.com/mf-app-02/dist/remoteEntry.js",

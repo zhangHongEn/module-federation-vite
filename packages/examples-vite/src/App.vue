@@ -4,6 +4,7 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <div>
+    vite vue
     <router-view />
   </div>
 </template>
