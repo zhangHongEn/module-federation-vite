@@ -21,7 +21,7 @@ function wrapHostInit() {
     init()
     `
 }
-function generateRemoteEntry({remotes, exposes, shared, name}) {
+function generateRemoteEntry({remotes, exposes, shared, name, shareScope}) {
   return `
   import {init as runtimeInit, loadRemote} from "@module-federation/runtime"
 
@@ -59,11 +59,6 @@ function generateRemoteEntry({remotes, exposes, shared, name}) {
         `
       }).join(",")}
     }
-    Object.keys(localShared).forEach(pkgname => {
-      const localShareModule = localShared[pkgname]
-      if (!shared[pkgname]) shared[pkgname] = {}
-      if (!shared[pkgname][localShareModule.version]) shared[pkgname][localShareModule.version] = localShareModule
-    })
     const initRes = await runtimeInit({
       name: ${JSON.stringify(name)},
       remotes: [${Object.keys(remotes).map(key => {
@@ -80,6 +75,7 @@ function generateRemoteEntry({remotes, exposes, shared, name}) {
       ],
       shared: localShared
     });
+    initRes.initShareScopeMap('${shareScope}', shared);
     return initRes
   }
 
@@ -107,7 +103,7 @@ function wrapShare(id, shared) {
           strictVersion: ${JSON.stringify(shareConfig.strictVersion)},
           requiredVersion: ${JSON.stringify(shareConfig.requiredVersion)}
         }}})
-        console.log("开始加载shared ${id}", res)
+        // console.log("开始加载shared ${id}", res)
         export ${command !== "build" ? "default" : "const dynamicExport = "} res()
       `,map: null,
       syntheticNamedExports: "dynamicExport"

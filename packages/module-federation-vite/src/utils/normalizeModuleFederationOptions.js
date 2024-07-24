@@ -135,7 +135,7 @@ function normalizeModuleFederationOptions(options) {
       remoteType: options.remoteType,
       remotes: normalizeRemotes(options.remotes),
       runtime: options.runtime,
-      shareScope: options.shareScope,
+      shareScope: options.shareScope || "default",
       shared: normalizeShared(options.shared),
       runtimePlugins: options.runtimePlugins,
       getPublicPath: options.getPublicPath,
