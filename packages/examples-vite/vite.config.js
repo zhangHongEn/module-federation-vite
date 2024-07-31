@@ -30,6 +30,7 @@ export default defineConfig({
         },
         "react-dom": {}
       },
+      runtimePlugins: ['./src/mfPlugins']
     }),
     // If you set build.target: "chrome89", you can remove this plugin
     // topLevelAwait(),
