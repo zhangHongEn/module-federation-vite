@@ -31,7 +31,7 @@ function generateRemoteEntry({remotes, exposes, shared, name, shareScope, runtim
   const exposesMap = {
     ${Object.keys(exposes).map(key => {
       return `
-      ${key}: () => import(${JSON.stringify(exposes[key].import)})
+      ${JSON.stringify(key)}: () => import(${JSON.stringify(exposes[key].import)})
       `
     }).join(",")}
   }

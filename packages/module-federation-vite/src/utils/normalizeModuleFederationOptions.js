@@ -83,7 +83,7 @@ function normalizeShareItem(key, shareItem) {
       from: undefined,
       shareConfig: {
         singleton: false,
-        requiredVersion: version
+        requiredVersion: `^${version}`
       }
     }
   }
@@ -94,7 +94,7 @@ function normalizeShareItem(key, shareItem) {
       scope: shareItem.shareScope || "default",
       shareConfig: {
         singleton: shareItem.singleton || false,
-        requiredVersion: shareItem.requiredVersion || version || "*",
+        requiredVersion: shareItem.requiredVersion || `^${version}` || "*",
         strictVersion: !!shareItem.strictVersion,
       }
     }

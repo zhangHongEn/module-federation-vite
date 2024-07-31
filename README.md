@@ -54,6 +54,7 @@ export default defineConfig({
 ```
 
 ## roadmap
+* fix: support filename hash
 * feat: generate mf-manifest.json
 * feat: support chrome plugin
 * ✅ ~~feat: support runtime plugins~~
