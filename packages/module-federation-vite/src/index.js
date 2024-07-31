@@ -215,7 +215,7 @@ module.exports = function federation(
           // generate shared
           return wrapShare(decodeURIComponent(prodSharedName.replace("__overrideModule__=", "")), shared)
         }
-        let [devRemoteModuleName] = id.match(new RegExp(`\/(${remotePrefixList.join("|")})(\_.*\.js|\.js)`)) || []
+        let [devRemoteModuleName] = (remotePrefixList.length && id.match(new RegExp(`\/(${remotePrefixList.join("|")})(\_.*\.js|\.js)`))) || []
         if (devRemoteModuleName) {
           // generate remote
           return wrapRemote(devRemoteModuleName.replace("/", "").replace(/_/g, "/").replace(".js", ""))
