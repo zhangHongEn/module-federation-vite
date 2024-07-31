@@ -11,7 +11,9 @@
     "build:examples-vite": "cd packages/examples-vite && npm run build",
     "build:examples-rust": "cd packages/examples-rust && npm run build",
     "build": "npx -y npm-run-all --parallel build:examples-vite build:examples-rust",
-    "preview": "cd packages/examples && npm run preview"
+    "preview:examples-vite": "cd packages/examples-vite && npm run preview",
+    "preview:examples-rust": "cd packages/examples-rust && npm run preview",
+    "preview": "npx -y npm-run-all --parallel preview:examples-vite preview:examples-rust"
   },
   "keywords": [],
   "author": "",
