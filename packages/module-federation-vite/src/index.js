@@ -21,9 +21,12 @@ function wrapHostInit() {
     init()
     `
 }
-function generateRemoteEntry({remotes, exposes, shared, name, shareScope}) {
+function generateRemoteEntry({remotes, exposes, shared, name, shareScope, runtimePlugins}) {
+  const pluginImportNames = runtimePlugins.map((p, i) => [`$runtimePlugin_${i}`, `import $runtimePlugin_${i} from "${p}";`]);
   return `
-  import {init as runtimeInit, loadRemote} from "@module-federation/runtime"
+  import {init as runtimeInit, loadRemote} from "@module-federation/runtime";
+  
+  ${pluginImportNames.map(item=>item[1]).join("\n")}
 
   const exposesMap = {
     ${Object.keys(exposes).map(key => {
@@ -73,7 +76,8 @@ function generateRemoteEntry({remotes, exposes, shared, name, shareScope}) {
           `
         }).join(",")}
       ],
-      shared: localShared
+      shared: localShared,
+      plugins: [${pluginImportNames.map(item=>`${item[0]}()`).join(", ")}]
     });
     initRes.initShareScopeMap('${shareScope}', shared);
     return initRes

@@ -56,7 +56,7 @@ export default defineConfig({
 ## roadmap
 * feat: generate mf-manifest.json
 * feat: support chrome plugin
-* feat: support runtime plugins
+* ✅ ~~feat: support runtime plugins~~
 * feat: download remote d.ts
 * feat: generate d.ts
 * feat: support @vitejs/plugin-legacy
