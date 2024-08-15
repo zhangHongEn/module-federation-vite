@@ -69,7 +69,7 @@ export default defineConfig({
   * build mode use rollup syntheticNamedExports
 #### sync import remote module
   * use top-level-await
-  * Incompatible environment using vite-plugin-top-level-await（refer [@originjs/vite-plugin-federation](https://github.com/originjs/vite-plugin-federation)）
+  * Incompatible environment using vite-plugin-top-level-await
 #### Supports a wide variety of remote（.json、.js;var、esm ...)
   * use @module-federation/runtime
 #### vite-plugin-override-module-empty
