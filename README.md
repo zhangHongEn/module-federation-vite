@@ -2,12 +2,6 @@
 
 Move here（https://github.com/module-federation/vite）
 
-## preview
-``` shell
-pnpm install && pnpm run dev
-pnpm install && pnpm run build
-```
-
 ## usage
 https://module-federation.io/guide/basic/webpack.html
 
