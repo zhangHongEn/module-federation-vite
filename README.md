@@ -1,6 +1,6 @@
 # Vite Plugin For Module Federation
 
-Move here（https://github.com/module-federation/vite）
+### Repository moved to this maintenance （ https://github.com/module-federation/vite ）
 
 ## usage
 https://module-federation.io/guide/basic/webpack.html
