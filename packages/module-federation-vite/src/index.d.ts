@@ -27,6 +27,7 @@ declare module 'module-federation-vite' {
     };
     filename: string;
     shared?: string[] | Shared;
+    runtimePlugins?: string[];
   }
 
   function fe(options: ModuleFederationPluginOptions): any;
